@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using Kupchyk01.Model;
 using Kupchyk01.Tools.Managers;
 using Kupchyk01.Tools.Navigation;
@@ -23,6 +24,7 @@ namespace Kupchyk01.ViewModel
         #endregion
 
         #region Commands
+        private RelayCommand<object> _sortCommand;
         private RelayCommand<object> _filterCommand;
         private RelayCommand<object> _addUserCommand;
         private RelayCommand<object> _modifyUserCommand;
@@ -34,7 +36,7 @@ namespace Kupchyk01.ViewModel
 
         public Person SelectedPerson
         {
-            get => _selectedPerson;
+            get { return _selectedPerson; }
             set
             {
                 _selectedPerson = value;
@@ -46,57 +48,40 @@ namespace Kupchyk01.ViewModel
         {
             StationManager.gridVM = this;
             StationManager.ModifyVM = new ModifyUserViewModel();
+            _personsList = new ObservableCollection<Person>(_personsList.OrderBy(p => p.FirstName));
         }
 
         public string FilterWord { get; set; }
 
         public int SortIndex
         {
-            get => _sortIndex;
+            get { return _sortIndex; }
             set
             {
                 _sortIndex = value;
-                Update();
+                OnPropertyChanged();
             }
         }
 
         public int FilterIndex
         {
-            get => _filterIndex;
+            get { return _filterIndex; }
             set
             {
                 _filterIndex = value;
-                Update();
+                OnPropertyChanged();
             }
         }
 
-        public IEnumerable<Person> MyPersonsList
+        public ObservableCollection<Person> MyPersonsList
         {
-            get
+            get {
+                return _personsList;
+            }
+            set
             {
-                IEnumerable<Person> list = _personsList;
-                switch (SortIndex)
-                {
-                    case 0: list = list.OrderBy(p => p.FirstName); break;
-                    case 1: list = list.OrderBy(p => p.LastName); break;
-                    case 2: list = list.OrderBy(p => p.Email); break;
-                    case 3: list = list.OrderBy(p => p.DateOfBirth); break;
-                    case 4: list = list.OrderBy(p => p.SighWest); break;
-                    case 5: list = list.OrderBy(p => p.SighChina); break;
-                }
-
-                if (String.IsNullOrWhiteSpace(FilterWord)) return list;
-
-                switch (FilterIndex)
-                {
-                    case 0: list = list.Where(p => p.FirstName.Contains(FilterWord)); break;
-                    case 1: list = list.Where(p => p.LastName.Contains(FilterWord)); break;
-                    case 2: list = list.Where(p => p.Email.Contains(FilterWord)); break;
-                    case 3: list = list.Where(p => p.SighChina.Contains(FilterWord)); break;
-                    case 4: list = list.Where(p => p.SighWest.Contains(FilterWord)); break;
-                }
-
-                return list;
+                _personsList = value;
+                OnPropertyChanged(nameof(MyPersonsList));
             }
         }
 
@@ -107,7 +92,9 @@ namespace Kupchyk01.ViewModel
         #endregion
 
         #region Commands
-        public RelayCommand<object> FilterCommand => _filterCommand ?? (_filterCommand = new RelayCommand<object>(o => { Update(); }));
+        public RelayCommand<object> SortCommand => _sortCommand ?? (_sortCommand = new RelayCommand<object>(o => SortImplementation()));
+
+        public RelayCommand<object> FilterCommand => _filterCommand ?? (_filterCommand = new RelayCommand<object>(o => { FilterImplementation(); }));
 
         public RelayCommand<object> AddUserCommand => _addUserCommand ?? (_addUserCommand = new RelayCommand<object>(o => AddUserImplementation()));
 
@@ -119,6 +106,58 @@ namespace Kupchyk01.ViewModel
 
 
         #endregion
+        private void SortImplementation()
+        {
+            switch (SortIndex)
+            {
+                case 0:
+                    _personsList = new ObservableCollection<Person>(_personsList.OrderBy(p => p.FirstName));
+                    break;
+                case 1:
+                    _personsList = new ObservableCollection<Person>(_personsList.OrderBy(p => p.LastName));
+                    break;
+                case 2:
+                    _personsList = new ObservableCollection<Person>(_personsList.OrderBy(p => p.Email));
+                    break;
+                case 3:
+                    _personsList = new ObservableCollection<Person>(_personsList.OrderBy(p => p.DateOfBirth));
+                    break;
+                case 4:
+                    _personsList = new ObservableCollection<Person>(_personsList.OrderBy(p => p.SighWest));
+                    break;
+                case 5:
+                    _personsList = new ObservableCollection<Person>(_personsList.OrderBy(p => p.SighChina));
+                    break;
+            }
+            OnPropertyChanged(nameof(MyPersonsList));
+            _personsList = StationManager.DataStorage.PersonsList;
+        }
+
+        private void FilterImplementation()
+        {
+            if (String.IsNullOrWhiteSpace(FilterWord)) return;
+
+            switch (FilterIndex)
+            {
+                case 0:
+                    _personsList = new ObservableCollection<Person>(_personsList.Where(p => p.FirstName.Contains(FilterWord)));
+                    break;
+                case 1:
+                    _personsList = new ObservableCollection<Person>(_personsList.Where(p => p.LastName.Contains(FilterWord)));
+                    break;
+                case 2:
+                    _personsList = new ObservableCollection<Person>(_personsList.Where(p => p.Email.Contains(FilterWord)));
+                    break;
+                case 3:
+                    _personsList = new ObservableCollection<Person>(_personsList.Where(p => p.SighChina.Contains(FilterWord)));
+                    break;
+                case 4:
+                    _personsList = new ObservableCollection<Person>(_personsList.Where(p => p.SighWest.Contains(FilterWord)));
+                    break;
+            }
+            OnPropertyChanged(nameof(MyPersonsList));
+            _personsList = StationManager.DataStorage.PersonsList;
+        }
 
         private void AddUserImplementation()
         {
@@ -137,7 +176,7 @@ namespace Kupchyk01.ViewModel
         private void DeleteUserImplementation()
         {
             StationManager.DataStorage.DeletePerson(SelectedPerson);
-            Update();
+            MyPersonsList = StationManager.DataStorage.PersonsList;
         }
 
         private void SaveImplementation()

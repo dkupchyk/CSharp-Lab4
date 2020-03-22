@@ -9,25 +9,103 @@ namespace Kupchyk01.Model
     [Serializable]
     class Person: INotifyPropertyChanged
     {
-        public string FirstName { get; set; }
+        private string _firstName;
+        private string _lastName;
+        private string _email;
+        private DateTime _dateOfBirth;
+        private string _sighChina;
+        private string _sighWest;
+        private int _age;
+        private bool _isAdult;
+        private bool _isBirthday;
 
-        public string LastName { get; set; }
+        public string FirstName
+        {
+            get { return _firstName; }
+            set
+            {
+                _firstName = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public string Email { get; set; }
+        public string LastName
+        {
+            get { return _lastName; }
+            set
+            {
+                _lastName = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public DateTime DateOfBirth { get; set; }
+        public string Email
+        {
+            get { return _email; }
+            set
+            {
+                _email = value;
+                OnPropertyChanged();
+            }
+        }
 
-       // public string StringDateOfBirth { get; set; }
+        public DateTime DateOfBirth
+        {
+            get { return _dateOfBirth; }
+            set
+            {
+                _dateOfBirth = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public int Age { get; set; }
+        public int Age
+        {
+            get { return _age; }
+            set
+            {
+                _age = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public string SighWest { get; set; }
+        public string SighChina
+        {
+            get { return _sighChina; }
+            set
+            {
+                _sighChina = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public string SighChina { get; set; }
-
-        public string IsAdult { get; set; }
-
-        public string IsBirthday { get; set; }
+        public string SighWest
+        {
+            get { return _sighWest; }
+            set
+            {
+                _sighWest = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsAdult
+        {
+            get { return _isAdult; }
+            set
+            {
+                _isAdult = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsBirthday
+        {
+            get { return _isBirthday; }
+            set
+            {
+                _isBirthday = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Person(string firstNameP, string lastNameP, string emailP, DateTime dateOfBirthP)
         {
@@ -38,7 +116,6 @@ namespace Kupchyk01.Model
             Age = (DateTime.Today - dateOfBirthP).Days / 365;
             IsAdult = CalculateIsAdult();
             IsBirthday = CalculateIsBirthdayToday();
-            //StringDateOfBirth = dateOfBirthP.ToString("d");
             SighWest = CalcWesternHorosc();
             SighChina = CalcChineseHorosc();
         }
@@ -62,7 +139,6 @@ namespace Kupchyk01.Model
             Age = (DateTime.Today - dateOfBirthP).Days / 365;
             IsAdult = CalculateIsAdult();
             IsBirthday = CalculateIsBirthdayToday();
-            //StringDateOfBirth = dateOfBirthP.ToString("d");
             SighWest = CalcWesternHorosc();
             SighChina = CalcChineseHorosc();
         }
@@ -129,16 +205,16 @@ namespace Kupchyk01.Model
             return Enum.GetName(typeof(Enums.ChinSignsEnum), ((Convert.ToDateTime(DateOfBirth)).Year - 4) % 12);
         }
 
-        public string CalculateIsBirthdayToday()
+        public bool CalculateIsBirthdayToday()
         {
-            if (DateOfBirth == null) return "";
-            return ((Convert.ToDateTime(DateOfBirth)).Day == DateTime.Today.Day && (Convert.ToDateTime(DateOfBirth)).Month == DateTime.Today.Month).ToString();
+            if (DateOfBirth == null) return false;
+            return ((Convert.ToDateTime(DateOfBirth)).Day == DateTime.Today.Day && (Convert.ToDateTime(DateOfBirth)).Month == DateTime.Today.Month);
         }
 
-        public string CalculateIsAdult() 
+        public bool CalculateIsAdult() 
         {
-            if (DateOfBirth == null) return "";
-            return ((DateTime.Today - Convert.ToDateTime(DateOfBirth)).Days / 365) >= 18 ? "True" : "False";
+            if (DateOfBirth == null) return false;
+            return ((DateTime.Today - Convert.ToDateTime(DateOfBirth)).Days / 365) >= 18 ? true : false;
         }
 
 

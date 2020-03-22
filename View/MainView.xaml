@@ -48,7 +48,7 @@
                 <DataGridTextColumn Header="First name" Binding="{Binding FirstName}"/>
                 <DataGridTextColumn Header="Last name" Binding="{Binding LastName}"/>
                 <DataGridTextColumn Header="E-mail" Binding="{Binding Email}"/>
-                <DataGridTextColumn Header="Birthday" Binding="{Binding DateOfBirth,StringFormat=d}"/>
+                <DataGridTextColumn Header="Birthday" Binding="{Binding DateOfBirth, StringFormat=d}"/>
                 <DataGridTextColumn Header="Age" Binding="{Binding Age}"/>
                 <DataGridCheckBoxColumn Header="Adult" Binding="{Binding IsAdult, Mode=OneWay}"/>
                 <DataGridCheckBoxColumn Header="Is birthday today?" Binding="{Binding IsBirthday, Mode=OneWay}"/>
@@ -58,18 +58,19 @@
         </DataGrid>
 
         <TextBlock Grid.Row="1" Grid.Column="1" Margin="15,0,0,0" FontSize="11" VerticalAlignment="Center">Sort by this:</TextBlock>
-        <ComboBox Grid.Row="1" Grid.Column="2" Margin="0,3,15,3" ItemsSource="{Binding SortList}" SelectedIndex="{Binding SortIndex}"/>
+        <ComboBox Grid.Row="1" Grid.Column="2" Margin="0,3,15,3" ItemsSource="{Binding SortList}" SelectedIndex="{Binding SortIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Content="Sort" FontSize="20" Margin="15,0,15,0" HorizontalAlignment="Stretch" Command="{Binding SortCommand}" Style="{StaticResource buttonHover}" />
 
-        <TextBlock Text="Criteria for filter: " Grid.Column="1" FontSize="11" Margin="15,0,0,0" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
-        <ComboBox  Grid.Row="2" Grid.Column="2" Margin="0,3,15,3" HorizontalAlignment="Center" ItemsSource="{Binding FilterList}" SelectedIndex="{Binding FilterIndex}"/>
+        <TextBlock Text="Criteria for filter: " Grid.Column="1" FontSize="11" Margin="15,0,0,0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+        <ComboBox  Grid.Row="3" Grid.Column="2" Margin="0,3,15,3" HorizontalAlignment="Center" ItemsSource="{Binding FilterList}" SelectedIndex="{Binding FilterIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBlock Text="Filter word: " Grid.Column="1" Margin="15,0,0,0" FontSize="11" Grid.Row="3" VerticalAlignment="Center"></TextBlock>
-        <TextBox Grid.Column="2" Grid.Row="3" Margin="0,3,15,3" Text="{Binding FilterWord}"/>
+        <TextBlock Text="Filter word: " Grid.Column="1" Margin="15,0,0,0" FontSize="11" Grid.Row="4" VerticalAlignment="Center"></TextBlock>
+        <TextBox Grid.Column="2" Grid.Row="4" Margin="0,14,15,14" Text="{Binding FilterWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Content="Filter" FontSize="20" Margin="15,14,15,14" HorizontalAlignment="Stretch" Command="{Binding FilterCommand}" Style="{StaticResource buttonHover}" />
 
-        <Button Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" Content="Filter" FontSize="20" Margin="15,14,15,14" HorizontalAlignment="Stretch" Command="{Binding FilterCommand}" Style="{StaticResource buttonHover}" />
         <Button Grid.ColumnSpan="2" Grid.Row="6" Grid.Column="1" Margin="15,14,15,14" HorizontalAlignment="Stretch" Content="Add user" FontSize="20" Command="{Binding AddUserCommand}" Style="{StaticResource buttonHover}"/>
         <Button Grid.ColumnSpan="2" Grid.Row="7" Grid.Column="1" Margin="15,14,15,14" HorizontalAlignment="Stretch" Content="Modify user" FontSize="20" Command="{Binding ModifyUserCommand}" Style="{StaticResource buttonHover}"/>
-        <Button Grid.ColumnSpan="2" Grid.Row="8" Grid.Column="1" Margin="15,14,15,14" HorizontalAlignment="Stretch" Content="Delete user" FontSize="20" Command="{Binding DeleteUserCommand}" Style="{StaticResource buttonHover}"/>
+        <Button Grid.ColumnSpan="2" Grid.Row="8" Grid.Column="1" Margin="15,14,15,14" HorizontalAlignment="Stretch" Content="Delete user" FontSize="20" Command="{Binding DeleteUserCommand, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource buttonHover}"/>
 
     </Grid>
 </UserControl>

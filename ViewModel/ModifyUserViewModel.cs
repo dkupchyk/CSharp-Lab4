@@ -4,6 +4,8 @@ using Kupchyk01.Tools;
 using Kupchyk01.Tools.Managers;
 using Kupchyk01.Tools.Navigation;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -110,7 +112,7 @@ namespace Kupchyk01.ViewModel
                 {
                     if (_user.ValidatePerson())
                     {
-                        if (_user.IsBirthday == "True")
+                        if (_user.IsBirthday)
                         {
                             MessageBox.Show("Happy birthday!\nHere’s to a bright,\nhealthy and exciting future!");
                         }
@@ -123,21 +125,15 @@ namespace Kupchyk01.ViewModel
                         StationManager.DataStorage.SaveChanges();
                         StationManager.gridVM.Update();
                         StationManager.CurrentPerson = new Person("", "", "");
+                        MessageBox.Show("User was successfully modified!");
                     }
                 }
                 catch (Exception ex)
                 {
-                    if (ex is PastBirthdayException || ex is FutureBirthdayException || ex is IncorrectEmailException)
-                    {
-                        MessageBox.Show(ex.Message);
-                        return;
-                    }
-
-                    throw;
+                    MessageBox.Show(ex.Message);
                 }
                 Thread.Sleep(1000);
                 LoaderManager.Instance.HideLoader();
-                MessageBox.Show("User was successfully modified!");
             });
         }
 
@@ -153,6 +149,17 @@ namespace Kupchyk01.ViewModel
             OnPropertyChanged(nameof(Email));
             OnPropertyChanged(nameof(DateOfBirth));
         }
+
+        #region INotifyPropertyChanged
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+        ////[NotifyPropertyChangedInvocator]
+        //protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
+
+        #endregion
 
     }
 }

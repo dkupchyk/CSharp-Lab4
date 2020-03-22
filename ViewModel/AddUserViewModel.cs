@@ -20,25 +20,34 @@ namespace Kupchyk01.ViewModel
         #endregion
 
         #region Properties 
-        private string FirstName
+        public string FirstName
         {
             get { return _user.FirstName; }
-            set{ _user.FirstName = value; }
+            set{
+                _user.FirstName = value;
+                OnPropertyChanged();
+            }
         }
 
-        private string LastName
+        public string LastName
         {
             get { return _user.LastName; }
-            set { _user.LastName = value; }
+            set {
+                _user.LastName = value;
+                OnPropertyChanged();
+            }
         }
 
-        private string Email
+        public string Email
         {
             get { return _user.Email; }
-            set { _user.Email = value; }
+            set {
+                _user.Email = value;
+                OnPropertyChanged();
+            }
         }
 
-        private DateTime DateOfBirth
+        public DateTime DateOfBirth
         {
             get
             {
@@ -47,6 +56,7 @@ namespace Kupchyk01.ViewModel
             set
             {
                 _user.DateOfBirth = value;
+                OnPropertyChanged();
             }
         }
 
@@ -85,7 +95,7 @@ namespace Kupchyk01.ViewModel
 
         private bool CanExecute(object obj)
         {
-            return (_user.DateOfBirth != DateTime.MinValue) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName) && !string.IsNullOrWhiteSpace(Email);
+            return (DateOfBirth != DateTime.MinValue) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName) && !string.IsNullOrWhiteSpace(Email);
         }
         #endregion
 
@@ -101,7 +111,7 @@ namespace Kupchyk01.ViewModel
                 {
                     if (_user.ValidatePerson())
                     {
-                        if (_user.IsBirthday == "True")
+                        if (_user.IsBirthday)
                         {
                             MessageBox.Show("Happy birthday!\nHere’s to a bright,\nhealthy and exciting future!");
                         }
@@ -110,28 +120,26 @@ namespace Kupchyk01.ViewModel
                         StationManager.DataStorage.AddPerson(createdUser);
                         StationManager.CurrentPerson = new Person("", "", "");
                         StationManager.gridVM.Update();
+                        MessageBox.Show("New user was successfully created!");
                     }
                 }
-
                 catch (Exception ex)
                 {
-                    if (ex is PastBirthdayException || ex is FutureBirthdayException || ex is IncorrectEmailException)
-                    {
-                        MessageBox.Show(ex.Message);
-                        return;
-                    }
-
-                    throw;
+                    MessageBox.Show(ex.Message);
                 }
                 Thread.Sleep(1000);
                 LoaderManager.Instance.HideLoader();
-                MessageBox.Show("New user was successfully created!");
-
             });
         }
 
         private void BackToMainImplementation()
         {
+            //return (DateOfBirth != DateTime.MinValue) && !string.IsNullOrWhiteSpace(FirstName) && !string.IsNullOrWhiteSpace(LastName) && !string.IsNullOrWhiteSpace(Email);
+            MessageBox.Show(DateOfBirth.ToString());
+            MessageBox.Show(FirstName);
+            MessageBox.Show(LastName);
+            MessageBox.Show(Email);
+
             NavigationManager.Instance.Navigate(ViewType.Main);
         }
         #endregion
